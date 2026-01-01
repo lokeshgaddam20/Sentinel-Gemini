@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - LOCATION=${LOCATION:-us-central1}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - ALLOWED_USERS=${ALLOWED_USERS}
+      - DLP_ENABLED=${DLP_ENABLED:-true}
+      - MODEL_NAME=${MODEL_NAME:-gemini-2.0-flash}
+      - MAX_TOKENS=${MAX_TOKENS:-2048}
+      - TEMPERATURE=${TEMPERATURE:-0.7}
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud:ro
+      - ./backend:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    name: corporate-copilot-network

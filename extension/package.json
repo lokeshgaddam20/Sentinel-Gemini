@@ -1,0 +1,67 @@
+{
+  "name": "sentinel-gemini",
+  "displayName": "Sentinel Gemini",
+  "description": "Secure AI assistant powered by Vertex AI for enterprise use",
+  "version": "1.0.0",
+  "publisher": "Lokesh.Pvt.Ltd",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sentinel-gemini",
+          "title": "Sentinel Gemini",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "sentinel-gemini": [
+        {
+          "type": "webview",
+          "id": "sentinel-gemini.chatView",
+          "name": "Chat",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "sentinel-gemini.insertCode",
+        "title": "Insert Code at Cursor"
+      },
+      {
+        "command": "sentinel-gemini.clearChat",
+        "title": "Clear Chat History"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {}
+}
