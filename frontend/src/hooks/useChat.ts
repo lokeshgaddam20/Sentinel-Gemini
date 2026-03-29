@@ -12,10 +12,8 @@ export const useChat = (authToken: string | null) => {
   const conversationId = useRef<string>(crypto.randomUUID());
   
   const sendMessage = useCallback(async (prompt: string) => {
-    if (!authToken) {
-      setError('Not authenticated. Please wait for authentication.');
-      return;
-    }
+    // Use actual token or fall back to dev-mode token
+    const tokenToSend = authToken || 'dev-mode';
     
     // Add user message
     const userMessage: Message = {
@@ -44,7 +42,7 @@ export const useChat = (authToken: string | null) => {
     try {
       const request: BackendRequest = {
         prompt,
-        token: authToken,
+        token: tokenToSend,
         conversation_id: conversationId.current,
         stream: true,
       };

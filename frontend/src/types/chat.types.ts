@@ -14,7 +14,7 @@ export interface ChatState {
 }
 
 export interface VSCodeMessage {
-  type: 'AUTH_TOKEN' | 'INSERT_CODE' | 'ERROR';
+  type: 'AUTH_TOKEN' | 'INSERT_CODE' | 'ERROR' | 'SIGN_IN' | 'SIGN_IN_REQUIRED' | 'WEBVIEW_READY';
   value?: string;
   code?: string;
 }

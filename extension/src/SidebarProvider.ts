@@ -32,24 +32,37 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     // Handle messages from the webview
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case 'WEBVIEW_READY': {
+          // React app has mounted — NOW safe to send auth status
+          await this._sendAuthToken();
+          break;
+        }
         case 'INSERT_CODE': {
           if (data.code) {
             await this._insertCodeAtCursor(data.code);
           }
           break;
         }
+        case 'SIGN_IN': {
+          // User clicked "Sign in" in the webview — trigger Microsoft auth
+          const session = await this._authManager.signIn();
+          if (session) {
+            this._view?.webview.postMessage({
+              type: 'AUTH_TOKEN',
+              value: session.accessToken,
+            });
+          }
+          break;
+        }
       }
     });
 
-    // When the view becomes visible, send the auth token
+    // When the panel becomes visible again, re-send auth
     webviewView.onDidChangeVisibility(async () => {
       if (webviewView.visible) {
         await this._sendAuthToken();
       }
     });
-
-    // Send auth token immediately
-    this._sendAuthToken();
   }
 
   private async _sendAuthToken() {
@@ -59,23 +72,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     try {
       const token = await this._authManager.getAccessToken();
-      
+
       if (token) {
         this._view.webview.postMessage({
           type: 'AUTH_TOKEN',
           value: token,
         });
       } else {
+        // No token — tell the webview to show a sign-in button
         this._view.webview.postMessage({
-          type: 'ERROR',
-          value: 'Failed to authenticate. Please sign in to Google.',
+          type: 'SIGN_IN_REQUIRED',
         });
       }
     } catch (error) {
       console.error('Failed to get auth token:', error);
       this._view.webview.postMessage({
-        type: 'ERROR',
-        value: 'Authentication error. Please try reloading the window.',
+        type: 'SIGN_IN_REQUIRED',
       });
     }
   }
@@ -98,11 +110,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   private _getHtmlForWebview(webview: vscode.Webview): string {
     // Get URIs for the built React app
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'assets', 'main.js')
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'assets', 'index.js')
     );
     
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'assets', 'main.css')
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'assets', 'index.css')
     );
 
     // Use a nonce to whitelist which scripts can be run

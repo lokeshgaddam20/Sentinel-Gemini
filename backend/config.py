@@ -23,9 +23,12 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = "http://localhost:5173,vscode-webview://*"
     
     # Vertex AI Settings
-    MODEL_NAME: str = "gemini-2.0-flash"
+    MODEL_NAME: str = "gemini-1.5-flash-002"
     MAX_TOKENS: int = 2048
     TEMPERATURE: float = 0.7
+    
+    # Dev Settings
+    DEV_MODE: bool = False
     
     class Config:
         env_file = ".env"

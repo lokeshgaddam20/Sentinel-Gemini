@@ -31,12 +31,19 @@ export const getVSCodeAPI = (): VSCodeAPI | null => {
 
 export const useVSCodeAPI = (
   onAuthToken?: (token: string) => void,
-  onError?: (error: string) => void
+  onError?: (error: string) => void,
+  onSignInRequired?: () => void
 ) => {
   const api = useRef<VSCodeAPI | null>(null);
   
   useEffect(() => {
     api.current = getVSCodeAPI();
+
+    // 🔑 Ping the extension FIRST — before adding our listener.
+    // This tells the extension host the React app is mounted and ready
+    // to receive messages. The extension will respond with AUTH_TOKEN
+    // or SIGN_IN_REQUIRED.
+    api.current?.postMessage({ type: 'WEBVIEW_READY' });
     
     // Listen for messages from the extension
     const messageHandler = (event: MessageEvent<VSCodeMessage>) => {
@@ -46,6 +53,11 @@ export const useVSCodeAPI = (
         case 'AUTH_TOKEN':
           if (message.value && onAuthToken) {
             onAuthToken(message.value);
+          }
+          break;
+        case 'SIGN_IN_REQUIRED':
+          if (onSignInRequired) {
+            onSignInRequired();
           }
           break;
         case 'ERROR':
@@ -61,7 +73,7 @@ export const useVSCodeAPI = (
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, [onAuthToken, onError]);
+  }, [onAuthToken, onError, onSignInRequired]);
   
   const postMessage = useCallback((message: VSCodeMessage) => {
     api.current?.postMessage(message);
