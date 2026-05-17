@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     LOCATION: str = "us-central1"
     
     # Google OAuth Settings
-    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_ID: str = "dev-client-id"  # default for dev mode
     
     # DLP Settings
     DLP_ENABLED: bool = True
@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     # CORS Settings
     ALLOWED_ORIGINS: str = "http://localhost:5173,vscode-webview://*"
     
-    # Vertex AI Settings
-    MODEL_NAME: str = "gemini-1.5-flash-002"
+    # Vertex AI Settings — gemini-2.5-flash is the current stable model
+    MODEL_NAME: str = "gemini-2.5-flash"
     MAX_TOKENS: int = 2048
     TEMPERATURE: float = 0.7
     
@@ -35,13 +35,11 @@ class Settings(BaseSettings):
         case_sensitive = True
     
     def get_allowed_users_list(self) -> List[str]:
-        """Parse comma-separated allowed users into a list"""
         if not self.ALLOWED_USERS:
             return []
         return [email.strip().lower() for email in self.ALLOWED_USERS.split(",")]
     
     def get_allowed_origins_list(self) -> List[str]:
-        """Parse comma-separated origins into a list"""
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
 
 settings = Settings()

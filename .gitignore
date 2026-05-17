@@ -14,10 +14,12 @@ out/
 dist/
 build/
 *.vsix
-media/
+
+# The built React webview goes here — keep the folder but ignore its contents
+# so the icon in images/ is NOT ignored
+extension/media/assets/
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo

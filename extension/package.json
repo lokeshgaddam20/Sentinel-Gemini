@@ -4,6 +4,7 @@
   "description": "Secure AI assistant powered by Vertex AI for enterprise use",
   "version": "1.0.0",
   "publisher": "Lokesh.Pvt.Ltd",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -21,7 +22,7 @@
         {
           "id": "sentinel-gemini",
           "title": "Sentinel Gemini",
-          "icon": "media/icon.svg"
+          "icon": "images/icon.png"
         }
       ]
     },
@@ -31,7 +32,7 @@
           "type": "webview",
           "id": "sentinel-gemini.chatView",
           "name": "Chat",
-          "icon": "media/icon.svg"
+          "icon": "images/icon.png"
         }
       ]
     },

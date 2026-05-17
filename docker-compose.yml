@@ -13,7 +13,7 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - ALLOWED_USERS=${ALLOWED_USERS}
       - DLP_ENABLED=${DLP_ENABLED:-true}
-      - MODEL_NAME=${MODEL_NAME:-gemini-2.0-flash}
+      - MODEL_NAME=${MODEL_NAME:-gemini-2.5-flash}
       - MAX_TOKENS=${MAX_TOKENS:-2048}
       - TEMPERATURE=${TEMPERATURE:-0.7}
     volumes:
