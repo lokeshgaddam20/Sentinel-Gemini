@@ -41,6 +41,35 @@ export const InputBox: React.FC<InputBoxProps> = ({ onSendMessage, disabled }) =
   
   return (
     <div className="border-t border-vscode-border bg-vscode-sidebar px-4 py-3">
+            {/* Model tag — sits above the input, looks professional */}
+      <div className="flex items-center gap-1.5 mb-2">
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px',
+          fontSize: '10px',
+          fontWeight: 600,
+          letterSpacing: '0.04em',
+          color: '#64a0ff',
+          background: 'rgba(100,160,255,0.1)',
+          border: '1px solid rgba(100,160,255,0.25)',
+          borderRadius: '4px',
+          padding: '2px 7px',
+        }}>
+          {/* Small lightning bolt — Gemini's vibe */}
+          <svg width="8" height="10" viewBox="0 0 8 10" fill="none">
+            <path d="M4.5 1L1 5.5H4L3.5 9L7 4.5H4L4.5 1Z" fill="#64a0ff" />
+          </svg>
+          gemini-2.5-flash
+        </span>
+        <span style={{
+          fontSize: '10px',
+          color: 'var(--vscode-descriptionForeground)',
+          opacity: 0.5,
+        }}>
+          · DLP protected
+        </span>
+      </div>
       <div className="flex items-end gap-2">
         {/* Attachment button (placeholder for future feature) */}
         <button
@@ -66,7 +95,7 @@ export const InputBox: React.FC<InputBoxProps> = ({ onSendMessage, disabled }) =
             value={input}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Copilot..."
+            placeholder="Ask Gemini..."
             disabled={disabled}
             className="w-full bg-vscode-input text-vscode-foreground placeholder-vscode-descriptionForeground px-3 py-2 rounded resize-none focus:outline-none focus:ring-1 focus:ring-vscode-focus disabled:opacity-50"
             style={{ minHeight: '38px', maxHeight: '120px' }}

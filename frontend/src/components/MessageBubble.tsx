@@ -39,7 +39,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onInsertC
             ) : (
               <ReactMarkdown
                 components={{
-                  code({ node, className, children, ...props }) {
+                  code({ node, className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '');
                     const codeString = String(children).replace(/\n$/, '');
                     
@@ -55,25 +55,25 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onInsertC
                       </code>
                     );
                   },
-                  p({ children }) {
+                  p({ children }: any) {
                     return <p className="mb-3 last:mb-0">{children}</p>;
                   },
-                  ul({ children }) {
+                  ul({ children }: any) {
                     return <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>;
                   },
-                  ol({ children }) {
+                  ol({ children }: any) {
                     return <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>;
                   },
-                  h1({ children }) {
+                  h1({ children }: any) {
                     return <h1 className="text-lg font-bold mb-2 mt-4">{children}</h1>;
                   },
-                  h2({ children }) {
+                  h2({ children }: any) {
                     return <h2 className="text-base font-bold mb-2 mt-3">{children}</h2>;
                   },
-                  h3({ children }) {
+                  h3({ children }: any) {
                     return <h3 className="text-sm font-bold mb-2 mt-2">{children}</h3>;
                   },
-                  blockquote({ children }) {
+                  blockquote({ children }: any) {
                     return (
                       <blockquote className="border-l-4 border-vscode-focus pl-3 italic text-vscode-descriptionForeground mb-3">
                         {children}
@@ -86,8 +86,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onInsertC
               </ReactMarkdown>
             )}
             
-            {message.isStreaming && (
-              <span className="inline-block w-1 h-4 bg-vscode-foreground ml-1 animate-pulse"></span>
+            {message.isStreaming && message.content && (
+              <span className="inline-block w-1 h-4 bg-vscode-foreground ml-0.5 animate-pulse align-middle"></span>
             )}
           </div>
         )}
