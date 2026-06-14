@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide will walk you through setting up a **FREE** Google Cloud Platform account to test Corporate Copilot.
+This guide will walk you through setting up a **FREE** Google Cloud Platform account to test Sentinel Gemini.
 
 ## 💰 What You Get for FREE
 
@@ -34,7 +34,7 @@ This guide will walk you through setting up a **FREE** Google Cloud Platform acc
 1. Go to [GCP Console](https://console.cloud.google.com/)
 2. Click the project dropdown at the top
 3. Click "New Project"
-4. Name: `corporate-copilot-demo`
+4. Name: `sentinel-gemini-demo`
 5. Click "Create"
 
 #### Via Command Line
@@ -46,11 +46,11 @@ This guide will walk you through setting up a **FREE** Google Cloud Platform acc
 gcloud auth login
 
 # Create project
-gcloud projects create corporate-copilot-demo \
-    --name="Corporate Copilot Demo"
+gcloud projects create sentinel-gemini-demo \
+    --name="Sentinel Gemini Demo"
 
 # Set as active project
-gcloud config set project corporate-copilot-demo
+gcloud config set project sentinel-gemini-demo
 
 # Verify
 gcloud config get-value project
@@ -71,6 +71,9 @@ gcloud services enable aiplatform.googleapis.com
 # Enable DLP (Data Loss Prevention)
 gcloud services enable dlp.googleapis.com
 
+# Enable Cloud Logging
+gcloud services enable logging.googleapis.com
+
 # Enable Cloud Resource Manager
 gcloud services enable cloudresourcemanager.googleapis.com
 
@@ -90,29 +93,41 @@ gcloud auth application-default login
 
 # Follow the browser prompt to authenticate
 # This creates credentials at: ~/.config/gcloud/application_default_credentials.json
+
+# Use this project for local ADC quota and billing attribution
+gcloud auth application-default set-quota-project sentinel-gemini-demo
+
+# Grant your local user permission to write Cloud Logging entries
+gcloud projects add-iam-policy-binding sentinel-gemini-demo \
+    --member="user:YOUR_EMAIL@example.com" \
+    --role="roles/logging.logWriter"
 ```
 
 #### For Production (Service Account)
 ```bash
 # Create service account
-gcloud iam service-accounts create corporate-copilot \
-    --display-name="Corporate Copilot Service Account"
+gcloud iam service-accounts create sentinel-gemini \
+    --display-name="Sentinel Gemini Service Account"
 
 # Grant necessary permissions
-gcloud projects add-iam-policy-binding corporate-copilot-demo \
-    --member="serviceAccount:corporate-copilot@corporate-copilot-demo.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding sentinel-gemini-demo \
+    --member="serviceAccount:sentinel-gemini@sentinel-gemini-demo.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
 
-gcloud projects add-iam-policy-binding corporate-copilot-demo \
-    --member="serviceAccount:corporate-copilot@corporate-copilot-demo.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding sentinel-gemini-demo \
+    --member="serviceAccount:sentinel-gemini@sentinel-gemini-demo.iam.gserviceaccount.com" \
     --role="roles/dlp.user"
 
+gcloud projects add-iam-policy-binding sentinel-gemini-demo \
+    --member="serviceAccount:sentinel-gemini@sentinel-gemini-demo.iam.gserviceaccount.com" \
+    --role="roles/logging.logWriter"
+
 # Create and download key
-gcloud iam service-accounts keys create ~/corporate-copilot-key.json \
-    --iam-account=corporate-copilot@corporate-copilot-demo.iam.gserviceaccount.com
+gcloud iam service-accounts keys create ~/sentinel-gemini-key.json \
+    --iam-account=sentinel-gemini@sentinel-gemini-demo.iam.gserviceaccount.com
 
 # Set environment variable
-export GOOGLE_APPLICATION_CREDENTIALS=~/corporate-copilot-key.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/sentinel-gemini-key.json
 ```
 
 ### Step 6: Create OAuth 2.0 Credentials
@@ -124,7 +139,7 @@ This is needed for the VS Code extension to authenticate users.
 2. **Configure OAuth Consent Screen** (if not done):
    - Click "Configure Consent Screen"
    - User Type: **Internal** (for company) or **External** (for testing)
-   - App name: **Corporate Copilot**
+   - App name: **Sentinel Gemini**
    - User support email: Your email
    - Developer contact: Your email
    - Scopes: Add `email` and `profile`
@@ -134,7 +149,7 @@ This is needed for the VS Code extension to authenticate users.
 3. **Create OAuth Client ID**:
    - Click "Create Credentials" → "OAuth client ID"
    - Application type: **Web application**
-   - Name: **Corporate Copilot**
+   - Name: **Sentinel Gemini**
    - Authorized JavaScript origins: Leave empty
    - Authorized redirect URIs:
      - `https://vscode.dev/redirect`
@@ -151,7 +166,7 @@ This is needed for the VS Code extension to authenticate users.
 # List available models
 gcloud ai models list --region=us-central1
 
-# You should see output including gemini-pro
+# You should see output including gemini-2.5-flash
 ```
 
 If this works, you're ready to go! 🎉
@@ -300,4 +315,4 @@ gcloud services enable SERVICE_NAME.googleapis.com
 
 ## 🎉 Next Steps
 
-You're ready to run Corporate Copilot! Return to the main README.md to continue setup.
+You're ready to run Sentinel Gemini! Return to the main README.md to continue setup.

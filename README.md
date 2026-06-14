@@ -5,16 +5,17 @@ A professional VS Code extension that provides a secure, monitored AI chat inter
 ## 🏗️ Architecture
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  VS Code Ext    │────▶│  FastAPI Backend │────▶│  Vertex AI      │
-│  (TypeScript)   │◀────│  (Python)        │◀────│  (Gemini Pro)   │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
+┌─────────────────┐     ┌──────────────────┐      ┌────────────────────┐
+│  VS Code Ext    │────▶│  FastAPI Backend │────▶│  Vertex AI         │
+│  (TypeScript)   │◀────│  (Python)        │◀────│  (Gemini 2.5 Flash)│
+└─────────────────┘     └──────────────────┘      └────────────────────┘
         │                        │
         │                        ▼
         │               ┌──────────────────┐
         │               │  Google Services │
         │               │  - Auth          │
-        └──────────────▶│  - DLP           │
+        └─────────────▶ │  - DLP           |
+                        │  - Logging       |
                         └──────────────────┘
 
 ┌─────────────────┐
@@ -145,6 +146,9 @@ gcloud services enable aiplatform.googleapis.com
 # Enable DLP API (Data Loss Prevention)
 gcloud services enable dlp.googleapis.com
 
+# Enable Cloud Logging API
+gcloud services enable logging.googleapis.com
+
 # Enable Cloud Resource Manager API
 gcloud services enable cloudresourcemanager.googleapis.com
 ```
@@ -154,6 +158,7 @@ gcloud services enable cloudresourcemanager.googleapis.com
 ```bash
 # Create application default credentials
 gcloud auth application-default login
+gcloud auth application-default set-quota-project sentinel-gemini-demo
 
 # This will open a browser for authentication
 # Select your Google account and grant permissions
@@ -190,13 +195,13 @@ const scopes = ['email', 'profile', 'openid'];
 # Test Vertex AI access
 gcloud ai models list --region=us-central1
 
-# You should see available models including gemini-pro
+# You should see available models including gemini-2.5-flash
 ```
 
 ## 💰 Cost Optimization (Free Tier Limits)
 
 ### Vertex AI Gemini Free Tier
-- **FREE**: First 50 requests/day to Gemini Pro
+- **FREE**: First 50 requests/day to Gemini 2.5 Flash
 - After: ~$0.00025 per 1k characters
 
 ### DLP Free Tier
@@ -220,9 +225,11 @@ gcloud ai models list --region=us-central1
 | `GOOGLE_CLIENT_ID` | OAuth client ID | Required |
 | `ALLOWED_USERS` | Comma-separated emails | Required |
 | `DLP_ENABLED` | Enable DLP scanning | `true` |
-| `MODEL_NAME` | Vertex AI model | `gemini-pro` |
+| `MODEL_NAME` | Vertex AI model | `gemini-2.5-flash` |
 | `MAX_TOKENS` | Max response length | `2048` |
 | `TEMPERATURE` | Model creativity (0-1) | `0.7` |
+| `CLOUD_LOGGING_ENABLED` | Send backend logs to Cloud Logging | `true` |
+| `CLOUD_LOG_NAME` | Cloud Logging log name | `sentinel-gemini-api` |
 
 ### Frontend Environment Variables
 

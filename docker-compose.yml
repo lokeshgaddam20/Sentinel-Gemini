@@ -16,12 +16,14 @@ services:
       - MODEL_NAME=${MODEL_NAME:-gemini-2.5-flash}
       - MAX_TOKENS=${MAX_TOKENS:-2048}
       - TEMPERATURE=${TEMPERATURE:-0.7}
+      - CLOUD_LOGGING_ENABLED=${CLOUD_LOGGING_ENABLED:-true}
+      - CLOUD_LOG_NAME=${CLOUD_LOG_NAME:-sentinel-gemini-api}
     volumes:
       - ~/.config/gcloud:/root/.config/gcloud:ro
       - ./backend:/app
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health').raise_for_status()"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -29,4 +31,4 @@ services:
 
 networks:
   default:
-    name: corporate-copilot-network
+    name: sentinel-gemini-network

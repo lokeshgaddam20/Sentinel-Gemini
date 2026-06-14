@@ -1,4 +1,4 @@
-# 🚀 Quick Start Guide - Corporate Copilot
+# 🚀 Quick Start Guide - Sentinel Gemini
 
 Get up and running in **10 minutes**!
 
@@ -25,7 +25,7 @@ If anything is missing, install it first!
 ```bash
 # Clone the repo
 git clone <your-repo-url>
-cd corporate-copilot
+cd sentinel-gemini
 
 # Run automated setup
 chmod +x setup-dev.sh
@@ -43,15 +43,17 @@ Follow these exact steps:
 gcloud auth login
 
 # 2. Create project
-gcloud projects create corporate-copilot-demo --name="Corporate Copilot"
-gcloud config set project corporate-copilot-demo
+gcloud projects create sentinel-gemini-demo --name="Sentinel Gemini"
+gcloud config set project sentinel-gemini-demo
 
 # 3. Enable APIs
 gcloud services enable aiplatform.googleapis.com
 gcloud services enable dlp.googleapis.com
+gcloud services enable logging.googleapis.com
 
 # 4. Authenticate
 gcloud auth application-default login
+gcloud auth application-default set-quota-project sentinel-gemini-demo
 
 # 5. Get your project ID
 gcloud config get-value project
@@ -64,11 +66,11 @@ gcloud config get-value project
 1. Go to: https://console.cloud.google.com/apis/credentials
 2. Click "Configure Consent Screen"
    - Choose "External" (for testing)
-   - App name: **Corporate Copilot**
+   - App name: **Sentinel Gemini**
    - Your email for support/developer
 3. Click "Create Credentials" → "OAuth Client ID"
    - Type: **Web application**
-   - Name: **Corporate Copilot**
+   - Name: **Sentinel Gemini**
    - Redirect URI: `https://vscode.dev/redirect`
 4. **Copy the Client ID** (looks like: `xxxxx.apps.googleusercontent.com`)
 
@@ -84,10 +86,12 @@ nano .env  # or use your favorite editor
 
 Update these values:
 ```env
-PROJECT_ID=corporate-copilot-demo  # Your project ID from step 2
+PROJECT_ID=sentinel-gemini-demo  # Your project ID from step 2
 GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com  # From step 3
 ALLOWED_USERS=your.email@gmail.com  # Your Google account email
 DLP_ENABLED=false  # Set to false for first test
+CLOUD_LOGGING_ENABLED=true
+CLOUD_LOG_NAME=sentinel-gemini-api
 ```
 
 Save and exit.
@@ -141,7 +145,7 @@ This creates files in `extension/media/`
 3. A new VS Code window opens (Extension Development Host)
 
 4. In the new window:
-   - Click the **Corporate Copilot icon** in the left sidebar
+   - Click the **Sentinel Gemini icon** in the left sidebar
    - You'll see "Authenticating with Google..."
    - Sign in with your Google account
    - Start chatting!
