@@ -1,5 +1,14 @@
-import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message=r'Field name ".*" shadows an attribute in parent "Operation"',
+    category=UserWarning,
+    module=r"pydantic\._internal\._fields",
+)
+
+from google import genai
+from google.genai import types
 from config import settings
 import logging
 from typing import Iterator
@@ -14,14 +23,14 @@ class VertexAIService:
         self.location = settings.LOCATION
         self.model_name = settings.MODEL_NAME
         
-        # Initialize Vertex AI
-        vertexai.init(project=self.project_id, location=self.location)
+        self.client = genai.Client(
+            vertexai=True,
+            project=self.project_id,
+            location=self.location,
+            http_options=types.HttpOptions(api_version="v1"),
+        )
         
-        # Create model instance
-        self.model = GenerativeModel(self.model_name)
-        
-        # Generation config
-        self.generation_config = GenerationConfig(
+        self.generation_config = types.GenerateContentConfig(
             max_output_tokens=settings.MAX_TOKENS,
             temperature=settings.TEMPERATURE,
         )
@@ -31,9 +40,10 @@ class VertexAIService:
     def generate_response(self, prompt: str, user_email: str) -> str:
         try:
             full_prompt = self._build_prompt(prompt, user_email)
-            response = self.model.generate_content(
-                full_prompt,
-                generation_config=self.generation_config,
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=full_prompt,
+                config=self.generation_config,
             )
             if not response.text:
                 raise ValueError("Empty response from model")
@@ -46,10 +56,10 @@ class VertexAIService:
     def generate_response_stream(self, prompt: str, user_email: str) -> Iterator[str]:
         try:
             full_prompt = self._build_prompt(prompt, user_email)
-            responses = self.model.generate_content(
-                full_prompt,
-                generation_config=self.generation_config,
-                stream=True,
+            responses = self.client.models.generate_content_stream(
+                model=self.model_name,
+                contents=full_prompt,
+                config=self.generation_config,
             )
             for response in responses:
                 if response.text:

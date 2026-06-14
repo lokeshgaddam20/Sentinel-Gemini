@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     # API Settings
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
+
+    # Logging Settings
+    CLOUD_LOGGING_ENABLED: bool = True
+    CLOUD_LOG_NAME: str = "sentinel-gemini-api"
     
     # CORS Settings
     ALLOWED_ORIGINS: str = "http://localhost:5173,vscode-webview://*"

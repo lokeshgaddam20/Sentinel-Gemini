@@ -11,6 +11,7 @@ export default {
         'vscode-sidebar': 'var(--vscode-sideBar-background)',
         'vscode-input': 'var(--vscode-input-background)',
         'vscode-button': 'var(--vscode-button-background)',
+        'vscode-button-foreground': 'var(--vscode-button-foreground)',
         'vscode-button-hover': 'var(--vscode-button-hoverBackground)',
         'vscode-foreground': 'var(--vscode-foreground)',
         'vscode-border': 'var(--vscode-panel-border)',

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Header } from './Header';
 import { MessageList } from './MessageList';
 import { InputBox } from './InputBox';
+import { ShieldIcon } from './ShieldIcon';
 import { useChat } from '@/hooks/useChat';
 import { useVSCodeAPI } from '@/hooks/useVSCodeAPI';
 
@@ -55,11 +56,7 @@ export const ChatInterface: React.FC = () => {
       <div style={styles.centered}>
         <div style={styles.brandHeroContainer}>
           <div style={styles.iconWrapper}>
-            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="46" fill="rgba(79, 142, 247, 0.04)" stroke="var(--vscode-button-background, #4f8ef7)" strokeWidth="2.5" strokeDasharray="4 3"/>
-              <path d="M50 20 L53 43 L75 43 L56 55 L63 78 L50 64 L37 78 L44 55 L25 43 L47 43 Z" fill="var(--vscode-button-background, #4f8ef7)" stroke="var(--vscode-button-background, #4f8ef7)" strokeWidth="1" strokeLinejoin="round"/>
-              <circle cx="50" cy="50" r="5" fill="var(--vscode-sideBar-background, #1e1e2e)"/>
-            </svg>
+            <ShieldIcon size={44} color="#64a0ff" />
           </div>
           <h2 style={styles.title}>Sentinel Gemini</h2>
           <p style={styles.subtitle}>Enterprise Guardrails & Secure Vertex AI Context Engine</p>
