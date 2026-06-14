@@ -14,16 +14,14 @@ export class AuthManager {
   }
 
   /**
-   * Get authentication session.
-   * Uses Microsoft authentication (built-in to VS Code).
-   * Falls back to a dev-mode token if running without auth in testing.
+   * Get authentication session using Google authentication provider
    */
   public async getGoogleSession(): Promise<vscode.AuthenticationSession | null> {
     try {
-      // Try Microsoft auth (built-in VS Code provider — no extra extension needed)
+      // Swapped from 'microsoft' to 'google' to align with Google OAuth verification backend
       const session = await vscode.authentication.getSession(
-        'microsoft',
-        ['https://graph.microsoft.com/User.Read'],
+        'google',
+        ['https://www.googleapis.com/auth/userinfo.email'],
         { createIfNone: false, silent: true }
       );
 
@@ -33,27 +31,22 @@ export class AuthManager {
         return session;
       }
 
-      // Not signed in — in dev mode, allow bypass so the UI still loads
-      console.warn(
-        'Sentinel Gemini: No auth session found. Running in unauthenticated dev mode.'
-      );
+      console.warn('Sentinel Gemini: No auth session found. Running in unauthenticated dev mode.');
       return null;
-
     } catch (error) {
-      // Auth provider timeout or unavailable — don't crash the extension
       console.error('Sentinel Gemini: Auth skipped (provider unavailable):', error);
       return null;
     }
   }
 
   /**
-   * Prompt the user to sign in with Microsoft.
+   * Prompt the user to sign in explicitly via Google
    */
   public async signIn(): Promise<vscode.AuthenticationSession | null> {
     try {
       const session = await vscode.authentication.getSession(
-        'microsoft',
-        ['https://graph.microsoft.com/User.Read'],
+        'google',
+        ['https://www.googleapis.com/auth/userinfo.email'],
         { createIfNone: true }
       );
       this.currentSession = session;
@@ -67,17 +60,11 @@ export class AuthManager {
     }
   }
 
-  /**
-   * Get the current access token (null if not signed in)
-   */
   public async getAccessToken(): Promise<string | null> {
     const session = await this.getGoogleSession();
     return session?.accessToken || null;
   }
 
-  /**
-   * Sign out the current user
-   */
   public async signOut(): Promise<void> {
     if (this.currentSession) {
       vscode.window.showInformationMessage(
@@ -87,9 +74,6 @@ export class AuthManager {
     }
   }
 
-  /**
-   * Get user info from the current session
-   */
   public getUserInfo(): { email: string; name: string } | null {
     if (!this.currentSession) {
       return null;
